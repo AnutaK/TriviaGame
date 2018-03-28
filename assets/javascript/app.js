@@ -1,10 +1,11 @@
 	/**Global variables*/
-	var timeInterval;
+	var intervalId;
 	var timer = 11;
 	var wrong = 0;
 	var correct = 0;
 	var unanswered;
 	var questionIndex = 0;
+	var number = 30;
 	var started = false;
 
 	var randomFactsQuestions = [
@@ -111,71 +112,76 @@
 	}
 
 	]
+
+	var questionsLength = randomFactsQuestions.length;
 	
 	function displayQuestion() {
 
-		$(".time-display").text("Time Remaining:")
-
 
 		//decrease timer and display it on screen in the timer div
-		// timeInterval = setInterval(decrement, 1000);
-		// decrement()
+		intervalId = setInterval(decrement, 1000);
+		
+		function decrement() {
+			number--;
+			console.log(number)
+			$(".time-display").text("Time Remaining: ").append(number);
 
-  $(".question").text(randomFactsQuestions[questionIndex].question)
-  $(".answer-1").text(randomFactsQuestions[questionIndex].answer1)
-  $(".answer-2").text(randomFactsQuestions[questionIndex].answer2)
-  $(".answer-3").text(randomFactsQuestions[questionIndex].answer3)
-  $(".answer-4").text(randomFactsQuestions[questionIndex].answer4)
-  $('.answer-buttons').show();
+			// if the timer reaches 0, call noTime()
+			if (number === 0) {
+				noTime();
+			}
+		}
+
+		$(".question").text(randomFactsQuestions[questionIndex].question)
+		$(".answer-1").text(randomFactsQuestions[questionIndex].answer1)
+		$(".answer-2").text(randomFactsQuestions[questionIndex].answer2)
+		$(".answer-3").text(randomFactsQuestions[questionIndex].answer3)
+		$(".answer-4").text(randomFactsQuestions[questionIndex].answer4)
+		$('.answer-buttons').show();
+
+	}
+
+	function noTime(){
+	// $('.button').off("click");
+	$('.question').text("Time's Up!").css({"color" : "red", "font-size" : "5em"});
+	$('.answer-buttons').hide();
+	clearInterval(intervalId);
+	console.log(intervalId)
+	questionIndex++;
+	unanswered++
+	clearInterval(intervalId);
+	if ( questionIndex == questionsLength){
+		setTimeout(endScreen, 1000 * 2);
+	} else {
+		setTimeout(displayQuestion, 1000 * 2);
+	}
+}
+function endScreen(){
+	$('.answer-buttons').show();
+	$('.question').text("That's the end of the game! Here's how you did:").css({"color" : "white", "font-size" : "3em"});
+	$('.answer-1').text("Correct answers: " + correct );
+	$('.answer-2').text("Wrong answers: " + wrong );
+	$('.answer-3').text("Unanswered: " + unanswered );
+	$('.answer-4').text(" Click Here To Play Again");
+	$('.answer-4').on("click", function(){
+		gameReset();
+		displayQuestion();
+ 	});
 
 }
 
-// function decrement() {
-// 			timer--;
-// 			$(".timer").html(timer);
-//       		// if the timer reaches 0, call noTime()
-//       	if (timer === 0) {
-//       		// noTime();
-//       }
-// 	 }
 
-// function noTime(){
-// 	$('.button').off("click");
-// 	$('.question').text("Time's Up!").css({"color" : "red", "font-size" : "5em"});
-// 	$('.answer-buttons').hide();
-// 	questCounter++;
-// 	unAnswered++
-// 	clearInterval(intervalId);
-// 	if ( questCounter == questionsLength){
-// 		setTimeout(endScreen, 1000 * 2);
-// 	} else {
-// 		setTimeout(displayQuestion, 1000 * 2);
-// 	}
-// }
-// function endScreen(){
-// 	$('.answer-buttons').show();
-// 	$('.question').text("That's the end of the game! Here's how you did:").css({"color" : "white", "font-size" : "3em"});
-// 	$('.answer-1').text("Correct answers: " + correct );
-// 	$('.answer-2').text("Wrong answers: " + wrong );
-// 	$('.answer-3').text("Unanswered: " + unanswered );
-// 	$('.answer-4').text(" Click Here To Play Again");
-// 	$('.answer-4').on("click", function(){
-// 		gameReset();
-// 		displayQuestion();
-//  	});
+function gameReset() {
+	questionIndex = 0;
+	correct = 0;
+	wrong = 0;
+	unanswered = 0;
 
-// }
-// function gameReset() {
-// 	questionIndex = 0;
-// 	correct = 0;
-// 	wrong = 0;
-// 	unanswered = 0;
-
-// 	return questionIndex;
-// 	return correct;
-// 	return wrong;
-// 	return unanswered;
-// }
+	return questionIndex;
+	return correct;
+	return wrong;
+	return unanswered;
+}
 
 function checkAnswers(text){
 
@@ -193,8 +199,13 @@ function correctAnswer(){
 	$('.question').text("You are correct!");
 	correct++;
 	questionIndex++;
-	console.log("right answer ran", correct)
 	setTimeout(displayQuestion,2000)
+	clearInterval(intervalId);
+	if ( questionIndex == questionsLength){
+		setTimeout(endScreen, 1000 * 2);
+	} else {
+		setTimeout(displayQuestion, 1000 * 2);
+	}
 }
 
 function wrongAnswer(){		
@@ -203,8 +214,13 @@ function wrongAnswer(){
 	$('.question').text(randomFactsQuestions[questionIndex].correctInfo);
 	wrong++;
 	questionIndex++;
-	console.log("wrong answer ran", wrong)
 	setTimeout(displayQuestion,2000)
+	clearInterval(intervalId);
+	if ( questionIndex == questionsLength){
+		setTimeout(endScreen, 1000 * 2);
+	} else {
+		setTimeout(displayQuestion, 1000 * 2);
+	}
 }
 
 $(document).ready(function(){
