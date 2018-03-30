@@ -2,7 +2,7 @@
 	var intervalId;
 	var wrong = 0;
 	var correct = 0;
-	var unanswered = 0;
+	// var unanswered = 0;
 	var questionIndex = 0;
 	var started = false;
 
@@ -161,7 +161,7 @@ function endScreen(){
 	$('.question').text("That's the end of the game! Here's how you did:").css({"color" : "white", "font-size" : "3em"});
 	$('.answer-1').text("Correct answers: " + correct );
 	$('.answer-2').text("Wrong answers: " + wrong );
-	$('.answer-3').text("Unanswered: " + unanswered );
+	// $('.answer-3').text("Unanswered: " + unanswered );
 	$('.answer-4').on("click", function(){
 		gameReset();
 		displayQuestion();
