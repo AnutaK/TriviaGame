@@ -2,7 +2,7 @@
 	var intervalId;
 	var wrong = 0;
 	var correct = 0;
-	var unanswered;
+	var unanswered = 0;
 	var questionIndex = 0;
 	var started = false;
 
@@ -117,11 +117,11 @@
 
 
 		var timer = 30;//decrease timer and display it on screen in the timer div
+		clearInterval(intervalId)
 		intervalId = setInterval(decrement, 1000);
 		
 		function decrement() {
 			timer--;
-			console.log(timer)
 			$(".time-display").text("Time Remaining: ")
 			$(".timer").append(timer);
 
@@ -144,13 +144,10 @@
 	// $('.button').off("click");
 	$('.question').text("Time's Up!").css({"color" : "red", "font-size" : "5em"});
 	$('.answer-buttons').hide();
-	console.log(intervalId)
 	questionIndex++;
 	unanswered++
 	clearInterval(intervalId);
 	intervalId =0;
-	debugger
-	console.log(intervalId)
 	if ( questionIndex == questionsLength){
 		setTimeout(endScreen, 1000 * 2);
 	} else {
@@ -158,30 +155,27 @@
 	}
 }
 function endScreen(){
+	console.log("This ran, line after endScreen")
+	clearInterval(intervalId);
 	$('.answer-buttons').show();
 	$('.question').text("That's the end of the game! Here's how you did:").css({"color" : "white", "font-size" : "3em"});
 	$('.answer-1').text("Correct answers: " + correct );
 	$('.answer-2').text("Wrong answers: " + wrong );
 	$('.answer-3').text("Unanswered: " + unanswered );
-	$('.answer-4').text(" Click Here To Play Again");
 	$('.answer-4').on("click", function(){
 		gameReset();
 		displayQuestion();
 	});
-
+	$('.answer-4').text(" Click Here To Play Again");
 }
 
 
 function gameReset() {
+	console.log("this ran!!", questionIndex)
 	questionIndex = 0;
 	correct = 0;
 	wrong = 0;
 	unanswered = 0;
-
-	return questionIndex;
-	return correct;
-	return wrong;
-	return unanswered;
 }
 
 function checkAnswers(text){
@@ -205,7 +199,7 @@ function correctAnswer(){
 	intervalId =0;
 
 	if ( questionIndex == questionsLength){
-		setTimeout(endScreen, 1000 * 2);
+		endScreen();
 	} else {
 		setTimeout(displayQuestion, 1000 * 2);
 	}
@@ -222,7 +216,7 @@ function wrongAnswer(){
 	intervalId =0;
 
 	if ( questionIndex == questionsLength){
-		setTimeout(endScreen, 1000 * 2);
+		endScreen();
 	} else {
 		setTimeout(displayQuestion, 1000 * 2);
 	}
