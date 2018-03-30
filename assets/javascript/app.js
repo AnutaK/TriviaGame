@@ -1,11 +1,9 @@
 	/**Global variables*/
 	var intervalId;
-	var timer = 11;
 	var wrong = 0;
 	var correct = 0;
 	var unanswered;
 	var questionIndex = 0;
-	var number = 30;
 	var started = false;
 
 	var randomFactsQuestions = [
@@ -118,16 +116,17 @@
 	function displayQuestion() {
 
 
-		//decrease timer and display it on screen in the timer div
+		var timer = 30;//decrease timer and display it on screen in the timer div
 		intervalId = setInterval(decrement, 1000);
 		
 		function decrement() {
-			number--;
-			console.log(number)
-			$(".time-display").text("Time Remaining: ").append(number);
+			timer--;
+			console.log(timer)
+			$(".time-display").text("Time Remaining: ")
+			$(".timer").append(timer);
 
 			// if the timer reaches 0, call noTime()
-			if (number === 0) {
+			if (timer === 0) {
 				noTime();
 			}
 		}
@@ -145,11 +144,13 @@
 	// $('.button').off("click");
 	$('.question').text("Time's Up!").css({"color" : "red", "font-size" : "5em"});
 	$('.answer-buttons').hide();
-	clearInterval(intervalId);
 	console.log(intervalId)
 	questionIndex++;
 	unanswered++
 	clearInterval(intervalId);
+	intervalId =0;
+	debugger
+	console.log(intervalId)
 	if ( questionIndex == questionsLength){
 		setTimeout(endScreen, 1000 * 2);
 	} else {
@@ -166,7 +167,7 @@ function endScreen(){
 	$('.answer-4').on("click", function(){
 		gameReset();
 		displayQuestion();
- 	});
+	});
 
 }
 
@@ -201,6 +202,8 @@ function correctAnswer(){
 	questionIndex++;
 	setTimeout(displayQuestion,2000)
 	clearInterval(intervalId);
+	intervalId =0;
+
 	if ( questionIndex == questionsLength){
 		setTimeout(endScreen, 1000 * 2);
 	} else {
@@ -216,6 +219,8 @@ function wrongAnswer(){
 	questionIndex++;
 	setTimeout(displayQuestion,2000)
 	clearInterval(intervalId);
+	intervalId =0;
+
 	if ( questionIndex == questionsLength){
 		setTimeout(endScreen, 1000 * 2);
 	} else {
