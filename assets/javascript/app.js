@@ -1,12 +1,13 @@
-	/**Global variables*/
-	var intervalId;
-	var wrong = 0;
-	var correct = 0;
-	// var unanswered = 0;
-	var questionIndex = 0;
-	var started = false;
+/**Global variables*/
+var intervalId;
+var wrong = 0;
+var correct = 0;
+// var unanswered = 0;
+var questionIndex = 0;
+var started = false;
+var finalQuestion = false;
 
-	var randomFactsQuestions = [
+var randomFactsQuestions = [
 
 	{
 		question: "The Gettysburg address was a speech given by which U.S. president?",
@@ -17,7 +18,6 @@
 		correctAnswer: "President Abraham Lincoln",
 		correctInfo: "The correct answer was: 'President Abraham Lincoln'"
 	},
-
 	{
 		question: "In 1985, five percent of U.S. households had telephone answering machines. By 1990 what percentage of homes had answering machines?",
 		answer1: "10 percent",
@@ -109,60 +109,60 @@
 		correctInfo: "The correct answer was: '$1'"
 	}
 
-	]
+]
 
-	var questionsLength = randomFactsQuestions.length;
-	
-	function displayQuestion() {
+var questionsLength = randomFactsQuestions.length;
+
+function displayQuestion() {
 
 
-		var timer = 30;//decrease timer and display it on screen in the timer div
-		clearInterval(intervalId)
-		intervalId = setInterval(decrement, 1000);
-		
-		function decrement() {
-			timer--;
-			$(".time-display").text("Time Remaining: ")
-			$(".timer").append(timer);
+	var timer = 30;//decrease timer and display it on screen in the timer div
+	clearInterval(intervalId)
+	intervalId = setInterval(decrement, 1000);
 
-			// if the timer reaches 0, call noTime()
-			if (timer === 0) {
-				noTime();
-			}
+	function decrement() {
+		timer--;
+		$(".time-display").text("Time Remaining: ")
+		$(".timer").append(timer);
+
+		// if the timer reaches 0, call noTime()
+		if (timer === 0) {
+			noTime();
 		}
-
-		$(".question").text(randomFactsQuestions[questionIndex].question)
-		$(".answer-1").text(randomFactsQuestions[questionIndex].answer1)
-		$(".answer-2").text(randomFactsQuestions[questionIndex].answer2)
-		$(".answer-3").text(randomFactsQuestions[questionIndex].answer3)
-		$(".answer-4").text(randomFactsQuestions[questionIndex].answer4)
-		$('.answer-buttons').show();
-
 	}
 
-	function noTime(){
+	$(".question").text(randomFactsQuestions[questionIndex].question)
+	$(".answer-1").text(randomFactsQuestions[questionIndex].answer1)
+	$(".answer-2").text(randomFactsQuestions[questionIndex].answer2)
+	$(".answer-3").text(randomFactsQuestions[questionIndex].answer3)
+	$(".answer-4").text(randomFactsQuestions[questionIndex].answer4)
+	$('.answer-buttons').show();
+
+}
+
+function noTime() {
 	// $('.button').off("click");
-	$('.question').text("Time's Up!").css({"color" : "red", "font-size" : "5em"});
+	$('.question').text("Time's Up!").css({ "color": "red", "font-size": "5em" });
 	$('.answer-buttons').hide();
 	questionIndex++;
 	unanswered++
 	clearInterval(intervalId);
-	intervalId =0;
-	if ( questionIndex == questionsLength){
+	intervalId = 0;
+	if (questionIndex == questionsLength) {
 		setTimeout(endScreen, 1000 * 2);
 	} else {
 		setTimeout(displayQuestion, 1000 * 2);
 	}
 }
-function endScreen(){
-	console.log("This ran, line after endScreen")
+
+function endScreen() {
 	clearInterval(intervalId);
 	$('.answer-buttons').show();
-	$('.question').text("That's the end of the game! Here's how you did:").css({"color" : "white", "font-size" : "3em"});
-	$('.answer-1').text("Correct answers: " + correct );
-	$('.answer-2').text("Wrong answers: " + wrong );
+	$('.question').text("That's the end of the game! Here's how you did:").css({ "color": "white", "font-size": "3em" });
+	$('.answer-1').text("Correct answers: " + correct);
+	$('.answer-2').text("Wrong answers: " + wrong);
 	// $('.answer-3').text("Unanswered: " + unanswered );
-	$('.answer-4').on("click", function(){
+	$('body').on("click",'.answer-4',function () {
 		gameReset();
 		displayQuestion();
 	});
@@ -171,79 +171,81 @@ function endScreen(){
 
 
 function gameReset() {
-	console.log("this ran!!", questionIndex)
+	finalQuestion = false
 	questionIndex = 0;
 	correct = 0;
 	wrong = 0;
 	unanswered = 0;
 }
 
-function checkAnswers(text){
+function checkAnswers(text) {
 
-	if(text == randomFactsQuestions[questionIndex].correctAnswer){
+	if (text == randomFactsQuestions[questionIndex].correctAnswer) {
 
 		correctAnswer()
 	}
-	else{
+	else {
 		wrongAnswer()
 	}
 }
 
-function correctAnswer(){
+function correctAnswer() {
 	$('.answer-buttons').hide();
 	$('.question').text("You are correct!");
 	correct++;
 	questionIndex++;
-	setTimeout(displayQuestion,2000)
+	setTimeout(displayQuestion, 2000)
 	clearInterval(intervalId);
-	intervalId =0;
+	intervalId = 0;
 
-	if ( questionIndex == questionsLength){
+	if (questionIndex == questionsLength) {
 		endScreen();
 	} else {
 		setTimeout(displayQuestion, 1000 * 2);
 	}
 }
 
-function wrongAnswer(){		
+function wrongAnswer() {
 	$('.answer-buttons').hide();
-	console.log("wrong answer")
 	$('.question').text(randomFactsQuestions[questionIndex].correctInfo);
 	wrong++;
 	questionIndex++;
-	setTimeout(displayQuestion,2000)
+	setTimeout(displayQuestion, 2000)
 	clearInterval(intervalId);
-	intervalId =0;
+	intervalId = 0;
 
-	if ( questionIndex == questionsLength){
+	if (questionIndex == questionsLength) {
+		finalQuestion = true
 		endScreen();
 	} else {
 		setTimeout(displayQuestion, 1000 * 2);
 	}
 }
 
-$(document).ready(function(){
+$(document).ready(function () {
 
 	$('.answer-1').text("Click Here To Start!");
 	$('.answer-2').hide();
 	$('.answer-3').hide();
 	$('.answer-4').hide();
-	$('.button').on("click", function(event){
-		if (!started){
-			started = true;
+	$('.button').on("click", function (event) {
+		if(!finalQuestion)
+		{
+			if (!started) {
+				started = true;
+				$('.answer-2').show();
+				$('.answer-3').show();
+				$('.answer-4').show();
+				displayQuestion();
+				return;
+			}
+			var buttonText = $(this).text()
 			$('.answer-2').show();
 			$('.answer-3').show();
 			$('.answer-4').show();
 			displayQuestion();
-			return;
+			checkAnswers(buttonText);
 		}
-		var buttonText = $(this).text()
-		console.log(buttonText)
-		$('.answer-2').show();
-		$('.answer-3').show();
-		$('.answer-4').show();
-		displayQuestion();
-		checkAnswers(buttonText);
 	});
 });
 
